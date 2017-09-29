@@ -5,7 +5,6 @@
  */
 package mastermind;
 
-import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -31,7 +30,7 @@ import java.util.Scanner;
 public class Mastermind {
 
     // Hard-coding the number of guesses a user can attempt to crack the secret code
-    public static int NUMBER_OF_GUESSES = 5;
+    public static int NUMBER_OF_GUESSES = 3;
 
     /**
      * @param args the command line arguments
@@ -45,65 +44,52 @@ public class Mastermind {
         int secretCode, usersGuess;
 
         // Generating a random 5-digit number
-        secretCode = 10000 + randomNumber.nextInt(90000);
+        secretCode = 100 + randomNumber.nextInt(900);
         System.out.println(secretCode);
 
-        /**
-         * TODO: Compare integers in LinkedLists
-         **/
-        
-        // Separating the 5-digit secret code into a LinkedList
-//        LinkedList<Integer> secretCodeDigits = separateDigits(secretCode);
+        // Converting secret code number into a string
+        String secret = String.valueOf(secretCode);
 
         System.out.println("I am thinking of a 5-digit code, can you crack it?");
         while (NUMBER_OF_GUESSES != 0) {
             usersGuess = kb.nextInt();
 
-            // Separating the user's guess into a LinkedList
-//            LinkedList<Integer> userGuessDigits = separateDigits(usersGuess);
+            String guess = String.valueOf(usersGuess);
 
-            int result = Integer.compare(secretCode, usersGuess);
+            for (int i = 0; i < secret.length(); i++) {
+                for (int j = 0; j < guess.length(); j++) {
+                    Character c1 = secret.charAt(i);
+                    Character c2 = guess.charAt(j);
+                    String s1 = c1.toString();
+                    String s2 = c2.toString();
+                    int x = Integer.parseInt(s1);
+                    int y = Integer.parseInt(s2);
+                    
+                    if (x == y) {
+                        System.out.print(s1 + " matches " + s2 + " at position " + (i + 1) + "\n");
+                    } // end if
 
-            switch (result) {
-                case 0:
-                    System.out.println("You cracked the code!" + "\n"
-                            + "The secret is " + secretCode);
+            } // end for j
+            
+        } // end for i
+            
+            boolean doesMatch = secret.equals(guess);
+                    
+                    if (doesMatch) {
+                        System.out.println("You cracked the code!" + "\n"
+                                + "The secret is " + secretCode);
+                        System.exit(0);
+                    } else {
+                        NUMBER_OF_GUESSES--;
+                        System.out.println("You have " + NUMBER_OF_GUESSES + " guesses remaining.");
+                    }
+                } // end while
+
+                if (NUMBER_OF_GUESSES == 0) {
+                    System.out.println("You lose!");
                     System.exit(0);
-                case 1:
-                    System.out.println("Sorry, that was an incorrect guess, "
-                            + "please try again");
-                    NUMBER_OF_GUESSES--;
-                    System.out.println("You have " + NUMBER_OF_GUESSES + " guesse remaining." );
-                    break;
-                default:
-                    break;
-            } // end switch
-
-        } // end while
-        
-        if (NUMBER_OF_GUESSES == 0) {
-            System.out.println("You lose!");
-            System.exit(0);
-        }
+                }
 
     } // end main
-
-    public static LinkedList<Integer> separateDigits(int number) {
-
-        // Creating a Linked List to place the separated digits of the secret code
-        LinkedList<Integer> digits = new LinkedList<Integer>();
-
-        // Using the mod operator to separate the 5 digits of the secret code 
-        while (number > 0) {
-            digits.push(number % 10);
-            number = number / 10;
-        }
-
-        while (!digits.isEmpty()) {
-            digits.pop();
-        }
-
-        return digits;
-    } // end public LinkedList<Integer> separateSecretCodeDigits(int number)
 
 } // end class
